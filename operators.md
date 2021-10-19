@@ -1,182 +1,196 @@
 # search, where, take, count, summarize, extend, project, distinct
 
-//------------------------------------------------------------------------------
-// Search
-//------------------------------------------------------------------------------
+# Search
 
 // Will search all columns in the Perf table for the value "Memory"
-Perf 
-| search "Memory"
 
-
-// Search is not case sensitive by default
-Perf 
-| search "memory"
-
+**Perf 
+| search "Memory"**
 
 // Although you can make it sensitive using a switch
-Perf 
-| search kind=case_sensitive "memory" 
 
-
-// Without a table, search goes arcross all tables in the current database
-// Warning, this takes a looooooooooong time to run, and it is highly likely
-// it will time out on a large database, like the Log Analytics Demo database. 
-search "Memory"
-
+**Perf 
+| search kind=case_sensitive "memory" **
 
 // A better choice is to limit the search to specific tables
-search in (Perf, Event, Alert) "Contoso"
+
+**search in (Perf, Event, Alert) "Contoso"**
 
 // The syntax......: Perf | search "Contoso"
+
 // is the same as..: search in (Perf) "Contoso"
 
-
 // Within a table, you can search a specific column for an exact value
-Perf 
-| search CounterName=="Available MBytes"
+
+**Perf 
+| search CounterName=="Available MBytes"**
 
 
 // Can also search for the value anywhere in the text in the specified column
-Perf 
-| search CounterName:"MBytes"
+
+**Perf 
+| search CounterName:"MBytes"**
 
 
 // This searched for a column whose value exactly matched the word Memory
-Perf 
-| search "Memory"
+
+**Perf 
+| search "Memory"**
 
 
 // Can also search across all columns using wildcards
-Perf 
-| search "*Bytes*"                  // Anywhere in any column's text
 
-Perf
-| search * startswith "Bytes"       // Begins with Bytes then any text after it
+**Perf 
+| search "*Bytes*"**                  // Anywhere in any column's text
 
-Perf
-| search * endswith "Bytes"         // Ends with Bytes
+**Perf
+| search * startswith "Bytes"**       // Begins with Bytes then any text after it
 
-Perf 
-| search "Free*bytes" // Begins with Free, ends with bytes, anything in between
+**Perf
+| search * endswith "Bytes"**         // Ends with Bytes
+
+**Perf 
+| search "Free*bytes"** // Begins with Free, ends with bytes, anything in between
 
 
 // Searches can be combined logically
-Perf 
-| search "Free*bytes" and ("C:" or "D:")
+
+**Perf 
+| search "Free*bytes" and ("C:" or "D:")**
 
 
 // Search also supports regular expressions
-Perf 
-| search InstanceName matches regex "[A-Z]:"
+
+**Perf 
+| search InstanceName matches regex "[A-Z]:"**
 
 
-//------------------------------------------------------------------------------
-// Where
-//------------------------------------------------------------------------------
+# Where
 
 // Similar to search, where limits the result set. Rather than looking across
 // columns for values, where limits based on conditions
-Perf 
-| where TimeGenerated >= ago(1h)
+
+**Perf 
+| where TimeGenerated >= ago(1h)**
 
 
 // ago allows for relative date ranges. Ago says "start right now, then go back
+
 // in time N quantity. These can be expressed using the following abbreviations
+
 //            d - days
+
 //            h - hours
+
 //            m - minutes
+
 //            s - seconds
+
 //           ms - milliseconds
+
 //  microsecond - microseconds
 
 
 // Can build up the where by adding to it logically
-Perf 
+
+**Perf 
 | where TimeGenerated  >= ago(1h)
-    and CounterName == "Bytes Received/sec"
+    and CounterName == "Bytes Received/sec"**
 
 
 // Multiple ands are allowed
-Perf 
+
+**Perf 
 | where TimeGenerated  >= ago(1h)
     and CounterName == "Bytes Received/sec"
-    and CounterValue > 0
+    and CounterValue > 0****
 
 
 // OR logic is allowed too!
-Perf 
+
+**Perf 
 | where TimeGenerated  >= ago(1h)
     and (CounterName == "Bytes Received/sec"
          or  
          CounterName == "% Processor Time"
-        )
+        )**
 
 
 // Combining and's and or's
-Perf 
+
+**Perf 
 | where TimeGenerated  >= ago(1h)
     and (CounterName == "Bytes Received/sec"
          or
          CounterName  == "% Processor Time"
         )
-    and CounterValue > 0
+    and CounterValue > 0**
 
 
 // Stackable where operators
-Perf 
+
+**Perf 
 | where TimeGenerated  >= ago(1h)
 | where (CounterName == "Bytes Received/sec"
          or
          CounterName  == "% Processor Time"
         )
-| where CounterValue > 0
+| where CounterValue > 0**
 
 
 // You can simulate search using where. Here it searches all columns
+
 // in the input for the phrase Bytes somewhere in a column's value
-Perf 
-| where * has "Bytes"
+
+**Perf 
+| where * has "Bytes"**
 
 
 // Similar to search, you can search positional matches
-Perf
-| where * hasprefix "Bytes"  // At the start
 
-Perf
-| where * hassuffix "Bytes"  // At the end
+**Perf
+| where * hasprefix "Bytes" ** // At the start
 
-Perf
-| where * contains "Bytes"   // contains and has behave the same
+**Perf
+| where * hassuffix "Bytes" ** // At the end
+
+**Perf
+| where * contains "Bytes" **  // contains and has behave the same
 
 
 // Where supports regex as well
-Perf
-| where InstanceName matches regex "[A-Z]:"
+
+**Perf
+| where InstanceName matches regex "[A-Z]:"**
 
 
-//------------------------------------------------------------------------------
-// Take
-//------------------------------------------------------------------------------
+
+# Take
+
 
 // Take is used to grab a random number of rows from the input data
-Perf 
-| take 10 
+
+**Perf 
+| take 10 **
 
 
 // There is no guarantee to which rows are returned, and the exact same
+
 // query run a second time may result in a different set of rows
+
 // (or it may be the same, depends on various factors)
-Perf 
-| take 10 
+
+**Perf 
+| take 10 **
 
 
 // Take can be combined with other language operators
-Perf 
+
+**Perf 
 | where TimeGenerated  >= ago(1h)
     and CounterName == "Bytes Received/sec"
     and CounterValue > 0
-| take 5
+| take 5**
 
 
 // Limit is a synonym for take
