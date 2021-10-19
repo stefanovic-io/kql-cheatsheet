@@ -1,17 +1,4 @@
-//------------------------------------------------------------------------------
-// Kusto Query Language (KQL) From Scratch
-// Module 7 - Machine Learning
-//
-// The demos in this module serve as a very basic introduction to the KQL
-// language within the Azure Log Analytics environment. 
-//
-// Copyright (c) 2018. Microsoft, Pluralsight, Robert C. Cain. 
-// All rights reserved. This code may be used in part within your own
-// applications. 
-//
-// This code may NOT be redistributed in it's entirely without permission
-// of one of it's copyright holders. 
-//------------------------------------------------------------------------------
+bashet, autocluster, diffpatterns, reduce
 
 //------------------------------------------------------------------------------
 // basket
