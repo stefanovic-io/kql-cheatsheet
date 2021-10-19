@@ -1,17 +1,4 @@
-//------------------------------------------------------------------------------
-// Kusto Query Language (KQL) From Scratch
-// Module 4 - Advanced Aggregations
-//
-// The demos in this module serve as a very basic introduction to the KQL
-// language within the Azure Log Analytics environment. 
-//
-// Copyright (c) 2018. Microsoft, Pluralsight, Robert C. Cain. 
-// All rights reserved. This code may be used in part within your own
-// applications. 
-//
-// This code may NOT be redistributed in it's entirely without permission
-// of one of it's copyright holders. 
-//------------------------------------------------------------------------------
+print, now, ago, sort, extract, parse, datetime, startof, endof, between, todynamic, format_datetime, datetime_part, iif, case, isempty isnull, split, strcat
 
 //------------------------------------------------------------------------------
 // arg_max / arg_min
