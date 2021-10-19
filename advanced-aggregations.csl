@@ -1,3 +1,4 @@
+arg_max arg_min, makeset makelist, mvexpand, percentiles, dcount, dcountif, countif, pivot, top-nested, max min, sum sumif, any
 
 //------------------------------------------------------------------------------
 // arg_max / arg_min
